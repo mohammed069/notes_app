@@ -1,23 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:note_app_depi/controllers/cubit/notes_cubit.dart';
-
-// class NotesScreen extends StatelessWidget {
-//   const NotesScreen({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Notes')),
-//       body: BlocBuilder<NotesCubit, NotesState>(
-//         builder: (context, state) {
-//           return const Center(child: Text('Notes Screen'));
-//         },
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app_depi/controllers/cubit/notes_cubit.dart';
