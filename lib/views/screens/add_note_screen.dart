@@ -6,7 +6,8 @@ import 'package:note_app_depi/views/widgets/my_text_form_field.dart';
 import 'package:uuid/uuid.dart';
 
 class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({Key? key}) : super(key: key);
+  final NotesModel? note;
+  const AddNoteScreen({Key? key, this.note}) : super(key: key);
 
   @override
   State<AddNoteScreen> createState() => _AddNoteScreenState();
@@ -18,6 +19,16 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
   final _descController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    final note = widget.note;
+    if (note != null) {
+      _titleController.text = note.title;
+      _descController.text = note.description;
+    }
+  }
+
+  @override
   void dispose() {
     _titleController.dispose();
     _descController.dispose();
@@ -26,13 +37,23 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
 
   void _saveNote() {
     if (_formKey.currentState!.validate()) {
-      final note = NotesModel(
-        id: const Uuid().v4(),
-        title: _titleController.text.trim(),
-        description: _descController.text.trim(),
-        date: DateTime.now(),
-      );
-      context.read<NotesCubit>().addNote(note);
+      if (widget.note == null) {
+        final note = NotesModel(
+          id: const Uuid().v4(),
+          title: _titleController.text.trim(),
+          description: _descController.text.trim(),
+          date: DateTime.now(),
+        );
+        context.read<NotesCubit>().addNote(note);
+      } else {
+        final updated = NotesModel(
+          id: widget.note!.id,
+          title: _titleController.text.trim(),
+          description: _descController.text.trim(),
+          date: widget.note!.date,
+        );
+        context.read<NotesCubit>().updateNote(updated);
+      }
       Navigator.of(context).pop();
     }
   }
@@ -48,7 +69,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           },
           icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
         ),
-        title: const Text('Add Note', style: TextStyle(color: Colors.blue)),
+        title: Text(
+          widget.note == null ? 'Add Note' : 'Edit Note',
+          style: const TextStyle(color: Colors.blue),
+        ),
         centerTitle: true,
         backgroundColor: Colors.blue.shade50,
       ),
@@ -83,7 +107,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                     Colors.blue.shade100,
                   ),
                 ),
-                child: const Text('Save', style: TextStyle(color: Colors.blue)),
+                child: Text(
+                  widget.note == null ? 'Save' : 'Update',
+                  style: const TextStyle(color: Colors.blue),
+                ),
               ),
             ],
           ),

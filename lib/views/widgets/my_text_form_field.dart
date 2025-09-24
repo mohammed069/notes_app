@@ -27,7 +27,7 @@ class MyTextFormField extends StatelessWidget {
         ),
         fillColor: Colors.blue.shade100,
         filled: true,
-        labelText: 'Title',
+        labelText: labelText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),

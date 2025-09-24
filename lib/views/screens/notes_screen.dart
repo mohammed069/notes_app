@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:note_app_depi/controllers/cubit/notes_cubit.dart';
 import 'package:note_app_depi/models/notes_model.dart';
 import 'add_note_screen.dart';
+import 'note_details_screen.dart';
 
 class NotesScreen extends StatelessWidget {
   const NotesScreen({super.key});
@@ -18,6 +19,9 @@ class NotesScreen extends StatelessWidget {
       ),
       body: BlocBuilder<NotesCubit, NotesState>(
         builder: (context, state) {
+          if (state is NotesError) {
+            return Center(child: Text(state.error));
+          }
           if (state is NotesLoaded) {
             if (state.notes.isEmpty) {
               return const Center(child: Text('No notes yet. add a note'));
@@ -30,7 +34,18 @@ class NotesScreen extends StatelessWidget {
                   color: Colors.blue.shade100,
                   child: ListTile(
                     title: Text(note.title),
-                    subtitle: Text(note.description),
+                    subtitle: Text(
+                      note.description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => NoteDetailsScreen(note: note),
+                        ),
+                      );
+                    },
                     trailing: IconButton(
                       onPressed: () {
                         context.read<NotesCubit>().deleteNote(note);
